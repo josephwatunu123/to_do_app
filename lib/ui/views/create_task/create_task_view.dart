@@ -54,9 +54,6 @@ class _CreateTaskViewState extends State<CreateTaskView> {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController taskTitleController = TextEditingController();
-    DateTime selectedDueDate = DateTime.now();
-
     return ViewModelBuilder.reactive(
         viewModelBuilder: ()=> CreateTaskViewModel(),
         onViewModelReady: (vm) => vm.setFormKey(_formKey),

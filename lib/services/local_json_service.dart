@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../models/task_model.dart';
+
 class LocalJsonService {
   static const String _fileName = 'todos.json';
   File? _localFile;
@@ -42,4 +44,5 @@ class LocalJsonService {
       rethrow;
     }
   }
+
 }

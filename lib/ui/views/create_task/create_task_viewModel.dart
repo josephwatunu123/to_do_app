@@ -7,11 +7,13 @@ import 'package:path_provider/path_provider.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../models/task_model.dart';
+import '../../../services/local_json_service.dart';
 
 class CreateTaskViewModel extends BaseViewModel{
   String title = '';
   String? priority;
   DateTime? dueDate;
+  final _jsonService = LocalJsonService();
 
   late final GlobalKey<FormState> formKey;
   void setFormKey(GlobalKey<FormState> key) {
@@ -33,37 +35,33 @@ class CreateTaskViewModel extends BaseViewModel{
     notifyListeners();
   }
 
-  Future<void> createNewTask () async{
+  Future<void> createNewTask() async {
     if (!formKey.currentState!.validate() || priority == null) return;
     setBusy(true);
+    try {
+      final rawList = await _jsonService.readJsonList();
+      final tasks = rawList.map((e) => TaskModel.fromJson(e)).toList();
 
-    try{
-      final dir = await getApplicationDocumentsDirectory();
-      final file = File('${dir.path}/todos.json');
-      if (!await file.exists()) {
-        final data = await rootBundle.loadString('assets/data/todos.json');
-        await file.writeAsString(data);
-      }
-      final raw = await file.readAsString();
-      final List<dynamic> list = jsonDecode(raw);
-      final maxId = list
-          .map((e) => int.tryParse(e['id'].toString()) ?? 0)
+      final maxId = tasks
+          .map((t) => int.tryParse(t.id) ?? 0)
           .fold<int>(0, (prev, el) => el > prev ? el : prev);
-      final newId = (maxId + 1).toString();
-      final task = TaskModel(
-        id: newId,
+
+      final newTask = TaskModel(
+        id: (maxId + 1).toString(),
         title: title.trim(),
         dueDate: dueDate?.toIso8601String(),
         priority: priority!,
         isComplete: false,
       );
-      list.add(task.toJson());
-      await file.writeAsString(jsonEncode(list));
-    }catch (e){
-      debugPrint("error saving new task $e");
 
-    }finally{
+      tasks.add(newTask);
+      await _jsonService.writeJsonList(tasks.map((t) => t.toJson()).toList());
+    } catch (e) {
+      debugPrint("Error creating new task: $e");
+      rethrow;
+    } finally {
       setBusy(false);
     }
   }
+
 }

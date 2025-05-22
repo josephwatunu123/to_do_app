@@ -12,6 +12,22 @@ class TaskModel {
     required this.priority,
     required this.isComplete
 });
+   TaskModel copyWith({
+     String? id,
+     String? title,
+     String? dueDate,
+     String? priority,
+     bool? isComplete,
+   }) {
+     return TaskModel(
+       id: id ?? this.id,
+       title: title ?? this.title,
+       dueDate: dueDate ?? this.dueDate,
+       priority: priority ?? this.priority,
+       isComplete: isComplete ?? this.isComplete,
+     );
+   }
+
 
    factory TaskModel.fromJson(Map<String, dynamic> json) {
      return TaskModel(
