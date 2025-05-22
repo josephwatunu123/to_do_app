@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
+import 'package:task_sync/ui/views/dashboard/dashboard_view_model.dart';
 import 'package:task_sync/ui/widgets/app_bar.dart';
+import 'package:task_sync/ui/widgets/custom_progress_bar.dart';
 
 class DashboardView extends StatefulWidget {
   const DashboardView({super.key});
@@ -11,23 +14,29 @@ class DashboardView extends StatefulWidget {
 class _DashboardViewState extends State<DashboardView> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(),
-      extendBodyBehindAppBar: true,
-      body: SafeArea(
-          child: Column(
-            spacing: 15,
-          children: [
-            _taskProgress("Completed Tasks"),
-            _taskProgress("High Priority Tasks Complete"),
-            _taskProgress("Medium Priority Tasks Complete"),
-            _taskProgress("Low Priority Tasks Complete"),
-        ],
-      )),
+    return ViewModelBuilder<DashboardViewModel>.reactive(
+        viewModelBuilder: ()=>DashboardViewModel()..fetchTasksProgress() ,
+        builder: (context, viewModel, child)=> Scaffold(
+          appBar: const CustomAppBar(),
+          extendBodyBehindAppBar: true,
+          body: SafeArea(
+              child: Column(
+                spacing: 15,
+                children: [
+                  _taskProgress("Completed Tasks", viewModel.overallProgress),
+                  _taskProgress("High Priority Tasks Complete", viewModel.highPriorityProgress),
+                  _taskProgress("Medium Priority Tasks Complete", viewModel.mediumPriorityProgress),
+                  _taskProgress("Low Priority Tasks Complete", viewModel.lowPriorityProgress),
+                  _pendingTasks("Tasks Pending", viewModel.pendingTasksCount),
+                  _pendingTasks("Tasks Completed", viewModel.completedTasksCount),
+                  _pendingTasks("High Priority tasks pending", viewModel.highPriorityCount)
+                ],
+              )),
+        )
     );
   }
 
-  Widget _taskProgress (String title){
+  Widget _taskProgress (String title, double progress){
     return Container(
       alignment: Alignment.centerLeft,
       padding: EdgeInsets.symmetric(horizontal: 12),
@@ -49,16 +58,33 @@ class _DashboardViewState extends State<DashboardView> {
             padding: const EdgeInsets.all(8.0),
             child: Text(title, style: TextStyle(color: Colors.purple, fontSize: 20, fontWeight: FontWeight.bold),),
           ),
-          Container(
-            alignment: Alignment.center,
-            height: 30,
-            width: double.infinity,
-            decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.circular(20)
-            ),
-            child: Text('6/6'),
-          )
+          CustomProgressBar(progress: progress)
+        ],
+      ),
+    );
+  }
+
+
+  Widget _pendingTasks (String title, int value){
+    return Container(
+      color: Colors.white60,
+      height: 70,
+      width: double.infinity,
+      padding: EdgeInsets.only(left:10, right: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(title,style:
+            TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 18,
+
+            ),),
+          Text("$value",style: TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: 25,
+            color: Colors.deepOrange
+          ),)
         ],
       ),
     );
