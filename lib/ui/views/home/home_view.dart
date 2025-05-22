@@ -5,6 +5,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:stacked/stacked.dart';
 import 'package:task_sync/ui/views/dashboard/dashboard_view.dart';
 import 'package:task_sync/ui/widgets/app_bar.dart';
+import 'package:task_sync/ui/widgets/no_tasks_screen.dart';
 
 import '../../../models/task_model.dart';
 import '../create_task/create_task_view.dart';
@@ -28,7 +29,7 @@ class _HomeViewState extends State<HomeView> {
         body: viewModel.isLoading
             ? const Center(child: CircularProgressIndicator())
             : SafeArea(
-          child: ReorderableListView(
+          child: viewModel.visibleTasks.isEmpty ? NoTasksScreen() :ReorderableListView(
             onReorder: (oldIndex, newIndex) {
               setState(() {
                 if (newIndex > oldIndex) newIndex -= 1;
