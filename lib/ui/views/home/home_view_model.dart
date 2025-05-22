@@ -15,6 +15,8 @@ class HomeViewModel extends BaseViewModel{
   bool get isLoading => _isLoading;
 
 
+
+
   Future<void> fetchToDos() async {
     setBusy(true);
     notifyListeners();
@@ -31,11 +33,25 @@ class HomeViewModel extends BaseViewModel{
     }
   }
 
+  Future<void> saveTasks() async {
+    try {
+      final jsonList = _tasks.map((task) => task.toJson()).toList();
+      await _jsonService.writeJsonList(jsonList);
+      debugPrint("Saved ${jsonList.length} tasks to local JSON");
+    } catch (e) {
+      debugPrint("Error saving tasks: $e");
+    }
+  }
 
-  void toggleIsComplete(TaskModel task, bool done) {
+  void toggleIsComplete(TaskModel task, bool done) async{
     final taskIndex = _tasks.indexWhere((t) => t.id == task.id);
     if (taskIndex != -1) {
       _tasks[taskIndex].isComplete = done;
+      try {
+        await saveTasks();
+      } catch (e) {
+        debugPrint("Error saving tasks: $e");
+      }
       notifyListeners();
     }
   }

@@ -29,7 +29,7 @@ class TaskModel {
        'title': title,
        'dueDate': dueDate,
        'priority': priority,
-       'completed': isComplete,
+       'isComplete': isComplete,
      };
    }
 }
