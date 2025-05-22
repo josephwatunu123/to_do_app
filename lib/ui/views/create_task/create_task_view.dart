@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import 'package:task_sync/ui/views/create_task/create_task_viewModel.dart';
+import 'package:task_sync/ui/views/create_task/create_task_view_model.dart';
 import 'package:task_sync/ui/widgets/app_bar.dart';
 
 class CreateTaskView extends StatefulWidget {
