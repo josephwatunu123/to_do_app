@@ -32,14 +32,14 @@ class _HomeViewState extends State<HomeView> {
             onReorder: (oldIndex, newIndex) {
               setState(() {
                 if (newIndex > oldIndex) newIndex -= 1;
-                final task = viewModel.tasks.removeAt(oldIndex);
-                viewModel.tasks.insert(newIndex, task);
+                final task = viewModel.visibleTasks.removeAt(oldIndex);
+                viewModel.visibleTasks.insert(newIndex, task);
               });
             },
             children: List.generate(
-              viewModel.tasks.length,
+              viewModel.visibleTasks.length,
                   (index) {
-                final task = viewModel.tasks[index];
+                final task = viewModel.visibleTasks[index];
                 return KeyedSubtree(
                   key: ValueKey(task.id),
                   child: _customListTile(task, viewModel),
