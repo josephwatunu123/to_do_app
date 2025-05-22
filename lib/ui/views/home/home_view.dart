@@ -93,9 +93,9 @@ class _HomeViewState extends State<HomeView> {
     ));
   }
 
-  Widget _customListTile (TaskModel task, HomeViewModel viewModel){
+  Widget _customListTile (TaskModel task, HomeViewModel viewModel,){
     TextStyle style = TextStyle(
-      fontSize: 18,
+      fontSize: 16,
       decoration: task.isComplete
           ? TextDecoration.lineThrough
           : TextDecoration.none,
@@ -103,43 +103,57 @@ class _HomeViewState extends State<HomeView> {
           ? Colors.grey
           : Colors.black,
     );
-
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10),
-      child: Container(
-        alignment: Alignment.center,
-        height: 100,
-        width: double.infinity,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          spacing: 10,
-          children: [
-            Container(
-              alignment: Alignment.centerLeft,
-              width: 200,
-              height: 80,
-              child: Text(task.title,style: style),
+    return Container(
+      alignment: Alignment.center,
+      height: 100,
+      width: double.infinity,
+      decoration: BoxDecoration(
+          border: Border.all(width: 0.4,color: Colors.purple)
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        spacing: 10,
+        children: [
+          Container(
+            alignment: Alignment.centerLeft,
+            width: 200,
+            height: 85,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(task.title,style: style),
+                const SizedBox(height: 5),
+                Text(
+                  task.dueDate ?? "",
+                  style: TextStyle(
+                      color: Colors.green,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600
+                  ),
+                )
+              ],
             ),
-            Container(
-              padding: EdgeInsets.all(5),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: _getPriorityColor(task.priority),
-                borderRadius: BorderRadius.circular(20)
-              ),
-              width: 70,
-              height: 30,
-              child: Text(task.priority),
+          ),
+          Container(
+            padding: EdgeInsets.all(5),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: _getPriorityColor(task.priority),
+              borderRadius: BorderRadius.circular(20)
             ),
-            Checkbox(
-                value: task.isComplete,
-                onChanged: (val){
-                  if(val !=null){
-                    viewModel.toggleIsComplete(task, val);
-                  }
-                })
-          ],
-        ),
+            width: 70,
+            height: 30,
+            child: Text(task.priority),
+          ),
+          Checkbox(
+              value: task.isComplete,
+              onChanged: (val){
+                if(val !=null){
+                  viewModel.toggleIsComplete(task, val);
+                }
+              })
+        ],
       ),
     );
   }

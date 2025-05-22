@@ -12,7 +12,7 @@ import '../../../services/local_json_service.dart';
 class CreateTaskViewModel extends BaseViewModel{
   String title = '';
   String? priority;
-  DateTime? dueDate;
+  String? dueDate;
   final _jsonService = LocalJsonService();
 
   late final GlobalKey<FormState> formKey;
@@ -30,7 +30,7 @@ class CreateTaskViewModel extends BaseViewModel{
     notifyListeners();
   }
 
-  void setDueDate(DateTime? val) {
+  void setDueDate(String? val) {
     dueDate = val;
     notifyListeners();
   }
@@ -49,7 +49,7 @@ class CreateTaskViewModel extends BaseViewModel{
       final newTask = TaskModel(
         id: (maxId + 1).toString(),
         title: title.trim(),
-        dueDate: dueDate?.toIso8601String(),
+        dueDate: dueDate,
         priority: priority!,
         isComplete: false,
       );

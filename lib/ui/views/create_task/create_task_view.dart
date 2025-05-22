@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
 import 'package:task_sync/ui/views/create_task/create_task_view_model.dart';
 import 'package:task_sync/ui/widgets/app_bar.dart';
@@ -22,10 +23,12 @@ class _CreateTaskViewState extends State<CreateTaskView> {
   ];
   String? selectedPriority;
 
-  DateTime? _selectedDate;
+  String? _selectedDate;
 
   void _pickDueDate(BuildContext context) async {
     final DateTime now = DateTime.now();
+
+    // First, pick the date
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: now,
@@ -46,9 +49,43 @@ class _CreateTaskViewState extends State<CreateTaskView> {
     );
 
     if (pickedDate != null) {
-      setState(() {
-        _selectedDate = pickedDate;
-      });
+      // Then pick the time
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: ColorScheme.light(
+                primary: Colors.blue,
+                onPrimary: Colors.white,
+                onSurface: Colors.black,
+              ),
+            ),
+            child: child!,
+          );
+        },
+      );
+
+      if (pickedTime != null) {
+        // Combine date and time
+        final DateTime combinedDateTime = DateTime(
+          pickedDate.year,
+          pickedDate.month,
+          pickedDate.day,
+          pickedTime.hour,
+          pickedTime.minute,
+        );
+
+        // Format to show only date, hour, and minute
+        final String formattedDateTime = DateFormat('MMM dd, yyyy HH:mm').format(combinedDateTime);
+
+        if(formattedDateTime.isNotEmpty){
+          setState(() {
+            _selectedDate=formattedDateTime;
+          });
+        }
+      }
     }
   }
 
@@ -88,7 +125,7 @@ class _CreateTaskViewState extends State<CreateTaskView> {
                 label: Text(
                   _selectedDate == null
                       ? "Select Due Date"
-                      : "Due: ${_selectedDate!.toLocal()}".split(' ')[0],
+                      : "Due: $_selectedDate",
                   style: const TextStyle(fontSize: 16),
                 ),
               ),
@@ -119,7 +156,7 @@ class _CreateTaskViewState extends State<CreateTaskView> {
       child: Form(
           key: _formKey,
           child: TextFormField(
-            maxLength: 70,
+            maxLength: 40,
             controller: titleController,
             decoration: InputDecoration(
               hintText: hintText,
