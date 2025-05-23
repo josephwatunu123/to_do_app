@@ -29,7 +29,7 @@ class _DashboardViewState extends State<DashboardView> {
                   _taskProgress("Low Priority Tasks Complete", viewModel.lowPriorityProgress),
                   _pendingTasks("Tasks Pending", viewModel.pendingTasksCount),
                   _pendingTasks("Tasks Completed", viewModel.completedTasksCount),
-                  _pendingTasks("High Priority tasks pending", viewModel.highPriorityCount)
+                  _pendingTasks("High Priority tasks pending", viewModel.highPriorityTasksPending)
                 ],
               )),
         )

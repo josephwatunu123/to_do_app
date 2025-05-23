@@ -29,22 +29,49 @@ class _HomeViewState extends State<HomeView> {
         body: viewModel.isLoading
             ? const Center(child: CircularProgressIndicator())
             : SafeArea(
-          child: viewModel.visibleTasks.isEmpty ? NoTasksScreen() :ReorderableListView(
+          child: viewModel.tasks.isEmpty ? NoTasksScreen() :ReorderableListView(
             onReorder: (oldIndex, newIndex) {
               setState(() {
                 if (newIndex > oldIndex) newIndex -= 1;
-                final task = viewModel.visibleTasks.removeAt(oldIndex);
-                viewModel.visibleTasks.insert(newIndex, task);
+                final task = viewModel.tasks.removeAt(oldIndex);
+                viewModel.tasks.insert(newIndex, task);
               });
             },
             children: List.generate(
-              viewModel.visibleTasks.length,
+              viewModel.tasks.length,
                   (index) {
-                final task = viewModel.visibleTasks[index];
-                return KeyedSubtree(
+                final task = viewModel.tasks[index];
+                return Dismissible(
                   key: ValueKey(task.id),
+                  direction: DismissDirection.endToStart, // swipe left to delete
+                  background: Container(
+                    alignment: Alignment.centerRight,
+                    color: Colors.red,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: const Icon(Icons.delete, color: Colors.white),
+                  ),
+                  confirmDismiss: (direction) async {
+                    return await showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Delete Task'),
+                        content: const Text('Are you sure you want to delete this task?'),
+                        actions: [
+                          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancel')),
+                          TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Delete')),
+                        ],
+                      ),
+                    );
+                  },
+                  onDismissed: (direction) {
+                    viewModel.deleteTask(task);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('${task.title} deleted')),
+                    );
+                  },
                   child: _customListTile(task, viewModel),
                 );
+
               },
             ),
           ),
