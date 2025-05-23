@@ -18,6 +18,7 @@ class HomeViewModel extends BaseViewModel{
 
 
   Future<void> fetchToDos() async {
+    _isLoading = true;
     setBusy(true);
     notifyListeners();
 
