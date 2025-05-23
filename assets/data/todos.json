@@ -22,41 +22,5 @@
     "title": "et porro tempora",
     "priority": "high",
     "isComplete": true
-  },
-  {
-    "id": 5,
-    "title": "laboriosam mollitia et enim quasi adipisci quia provident illum",
-    "priority": "medium",
-    "isComplete": false
-  },
-  {
-    "id": 6,
-    "title": "qui ullam ratione quibusdam voluptatem quia omnis",
-    "priority": "low",
-    "isComplete": false
-  },
-  {
-    "id": 7,
-    "title": "illo expedita consequatur quia in",
-    "priority": "high",
-    "isComplete": false
-  },
-  {
-    "id": 8,
-    "title": "quo adipisci enim quam ut ab",
-    "priority": "medium",
-    "isComplete": true
-  },
-  {
-    "id": 9,
-    "title": "molestiae perspiciatis ipsa",
-    "priority": "low",
-    "isComplete": false
-  },
-  {
-    "id": 10,
-    "title": "illo est ratione doloremque quia maiores aut",
-    "priority": "high",
-    "isComplete": true
   }
 ]
