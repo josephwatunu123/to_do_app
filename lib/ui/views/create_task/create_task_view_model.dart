@@ -15,6 +15,7 @@ class CreateTaskViewModel extends BaseViewModel{
   String? priority;
   String? dueDate;
   final _jsonService = LocalJsonService();
+  static const platform = MethodChannel('com.tasksync/notifications');
 
   late final GlobalKey<FormState> formKey;
   void setFormKey(GlobalKey<FormState> key) {
@@ -69,7 +70,7 @@ class CreateTaskViewModel extends BaseViewModel{
     }
   }
 
-  static const platform = MethodChannel('com.tasksync/notifications');
+
 
   Future<void> scheduleAndroidNotification(
       String title, DateTime dateTime) async {
