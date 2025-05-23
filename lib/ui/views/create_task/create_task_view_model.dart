@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:stacked/stacked.dart';
 
@@ -14,6 +15,7 @@ class CreateTaskViewModel extends BaseViewModel{
   String? priority;
   String? dueDate;
   final _jsonService = LocalJsonService();
+  static const platform = MethodChannel('com.tasksync/notifications');
 
   late final GlobalKey<FormState> formKey;
   void setFormKey(GlobalKey<FormState> key) {
@@ -56,6 +58,10 @@ class CreateTaskViewModel extends BaseViewModel{
 
       tasks.add(newTask);
       await _jsonService.writeJsonList(tasks.map((t) => t.toJson()).toList());
+      if (dueDate != null) {
+        final parsedDate = DateFormat('MMM dd, yyyy HH:mm').parse(dueDate!);
+        await scheduleAndroidNotification(title.trim(), parsedDate);
+      }
     } catch (e) {
       debugPrint("Error creating new task: $e");
       rethrow;
@@ -63,5 +69,20 @@ class CreateTaskViewModel extends BaseViewModel{
       setBusy(false);
     }
   }
+
+
+
+  Future<void> scheduleAndroidNotification(
+      String title, DateTime dateTime) async {
+    try {
+      await platform.invokeMethod('scheduleNotification', {
+        'title': title,
+        'timestamp': dateTime.millisecondsSinceEpoch,
+      });
+    } on PlatformException catch (e) {
+      debugPrint("Failed to schedule notification: ${e.message}");
+    }
+  }
+
 
 }

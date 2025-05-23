@@ -130,6 +130,7 @@ class DashboardViewModel extends BaseViewModel {
   int get totalTasksCount => _allTasks.length;
   int get completedTasksCount => _completedTasks.length;
   int get pendingTasksCount => _allTasks.length - _completedTasks.length;
+  int get highPriorityTasksPending => _highPriorityTasks.length - _completedHighPriorityTasks.length;
 
   // Priority-specific counts
   int get highPriorityCount => _highPriorityTasks.length;
